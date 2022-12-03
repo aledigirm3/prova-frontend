@@ -5,15 +5,17 @@ import config from '../configuration.js'
 import { toast } from 'react-toastify'
 import Header from '../component/Header.js'
 import Footer from '../component/Footer.js'
+import { useNavigate } from 'react-router-dom'
 
 function SignIn () {
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axios.post(`${config.api.uri}/user/actions/signin`, {
+      await axios.post(`${config.api.uri}/auth/actions/signin`, {
         email,
         password
       })
@@ -23,6 +25,7 @@ function SignIn () {
       setPassword('')
 
       toast.success('Accesso effettuato')
+      navigate('/user/dashboard')
     } catch (err) {
       toast.error(err.response.data.error)
     }

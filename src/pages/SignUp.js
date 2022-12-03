@@ -14,7 +14,7 @@ function SignUp () {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axios.post(`${config.api.uri}/user`, {
+      await axios.post(`${config.api.uri}/auth`, {
         name,
         email,
         password
