@@ -3,8 +3,6 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import config from '../configuration.js'
 import { toast } from 'react-toastify'
-import Header from '../component/Header.js'
-import Footer from '../component/Footer.js'
 
 function SignUp () {
   const [name, setName] = useState('')
@@ -33,7 +31,6 @@ function SignUp () {
 
   return (
     <div>
-      <Header/>
      <div className="container custom_className pt-5">
       <h2 className="signup_title text-center">SIGN UP</h2>
       <form className=" col-sm-6 offset-3 pt-5 signup_form">
@@ -55,7 +52,6 @@ function SignUp () {
         <button onClick={handleSubmit} type="submit" className="btn btn-primary btn-block mb-4">Register</button>
       </form>
      </div>
-     <Footer/>
    </div>
   )
 }
