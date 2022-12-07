@@ -1,20 +1,15 @@
-// rafce
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import config from '../../configuration.js'
-import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
 
 const UserDashboard = () => {
-  const navigate = useNavigate()
   const [user, setUser] = useState('')
   useEffect(() => {
     axios.get(`${config.api.uri}/auth/actions/getme`, { withCredentials: true })
       .then(res => {
         setUser(res.data.user)
       }).catch(err => {
-        toast.error(err.response.data.error)
-        navigate('/signin') // in caso di errore reindirizzo sulla pagina di login
+        console.log(err)
       })
   }, [])
 
