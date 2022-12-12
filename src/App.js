@@ -9,6 +9,7 @@ import Home from './pages/Home'
 import SignUp from './pages/SignUp'
 import SignIn from './pages/SignIn'
 import UserDashboard from './pages/user/UserDashboard'
+import CreateProduct from './pages/admin/CreateProduct'
 import PrivateRoutes from './component/PrivateRoutes'
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <Route path='/signin' element={<SignIn/>}/>
         <Route element={<PrivateRoutes/>}>
               <Route path='/user/dashboard' element={<UserDashboard/>} />
+              <Route path='/admin/create/product' element={<CreateProduct/>}/>
           </Route>
       </Routes>
       <Footer/>
