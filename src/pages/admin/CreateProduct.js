@@ -34,15 +34,17 @@ const CreateProduct = () => {
   }
 
   // SUBMIT
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    axios.post(`${config.api.uri}/product`, {
-      name,
-      description,
-      price,
-      category,
-      image
-    }).then(() => {
+    try {
+      await axios.post(`${config.api.uri}/product`, {
+        name,
+        description,
+        price,
+        category,
+        image
+      }, { withCredentials: true })
+
       setName('')
       setDescription('')
       setPrice('')
@@ -50,10 +52,9 @@ const CreateProduct = () => {
       setImage('')
 
       toast.success('Prodotto aggiunto con successo')
-    })
-      .catch(err => {
-        toast.error(err.response.data.error)
-      })
+    } catch (err) {
+      toast.error(err.response.data.error)
+    }
   }
 
   return (
