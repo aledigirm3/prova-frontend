@@ -60,18 +60,22 @@ const Home = () => {
   /* ======================================================================================================================= */
 
   const handleCategorySearch = async (e) => {
+    controller.abort()
     await setCategory(e.target.value)
     await setSearch('')
     setPage(1)
   }
 
   const handleSearch = async (e) => {
+    controller.abort()
     await setSearch(e.target.value)
     setPage(1)
   }
 
+  const controller = new AbortController()
+
   useEffect(() => {
-    axios.get(`${config.api.uri}/product/actions/search?name=${search}&category=${category}&page=${page}&limit=${3}`)
+    axios.get(`${config.api.uri}/product/actions/search?name=${search}&category=${category}&page=${page}&limit=${3}`, { signal: controller.signal })
       .then(result => { setProducts(result.data.result) })
       .catch(err => console.log(err))
   }, [page, category, search])
