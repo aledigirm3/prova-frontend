@@ -11,6 +11,7 @@ import SignIn from './pages/SignIn'
 import UserDashboard from './pages/user/UserDashboard'
 import CreateProduct from './pages/admin/CreateProduct'
 import PrivateRoutes from './component/PrivateRoutes'
+import ProductInfo from './pages/ProductInfo'
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
         <Route path='/' element={<Home/>}/>
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/signin' element={<SignIn/>}/>
+        <Route path='/product/:id' element={<ProductInfo/>}/>
         <Route element={<PrivateRoutes/>}>
               <Route path='/user/dashboard' element={<UserDashboard/>} />
               <Route path='/admin/create/product' element={<CreateProduct/>}/>
