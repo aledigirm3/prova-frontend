@@ -2,10 +2,15 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import config from '../configuration'
 import Card from '../component/Card'
+import { toast } from 'react-toastify'
 
 const Home = () => {
+  const controller = new AbortController()
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
+  const [update, setUpdate] = useState(false)
+  // ordinamento
+  const [sort, setSort] = useState('')
   // products from the backend
   const [products, setProducts] = useState([])
   // categories from the backend
@@ -16,97 +21,107 @@ const Home = () => {
       .catch(err => { console.log(err) })
   }, [])
   /* ======================================================PAGINATION==================================================== */
+  const limit = 3
   const [page, setPage] = useState(1)
   const [pageCount, setPageCount] = useState(0)
 
-  useEffect(() => {
-    if (category === '') {
-      axios.get(`${config.api.uri}/product/count?name=${search}`)
-        .then(result => {
-          let pg = (Math.floor(result.data.data.count / 3))
-          if ((result.data.data.count % 3) !== 0) { pg += 1 }
-          setPageCount(pg)
-        })
-        .catch(err => console.log(err))
-    } else {
-      axios.get(`${config.api.uri}/product/count?name=${search}&category=${category}`)
-        .then(result => {
-          let pg = (Math.floor(result.data.data.count / 3))
-          if ((result.data.data.count % 3) !== 0) { pg += 1 }
-          setPageCount(pg)
-        })
-        .catch(err => console.log(err))
-    }
-  }, [search, category])
-
   const handlePrevious = () => {
+    controller.abort()
     const p = page
     if (p === 1) {
       return
     }
 
     setPage(p - 1)
+    setUpdate(!update)
   }
 
   const handleNext = () => {
+    controller.abort()
     const p = page
     if (p === pageCount) {
       return
     }
 
     setPage(p + 1)
+    setUpdate(!update)
   }
-
   /* ======================================================================================================================= */
 
-  const handleCategorySearch = async (e) => {
+  const handleCategorySearch = (e) => {
     controller.abort()
-    await setCategory(e.target.value)
-    await setSearch('')
+    setCategory(e.target.value)
+    setSearch('')
+    setSort('')
     setPage(1)
+    setUpdate(!update)
   }
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     controller.abort()
-    await setSearch(e.target.value)
+    setSearch(e.target.value)
+    setSort('')
     setPage(1)
+    setUpdate(!update)
   }
-
-  const controller = new AbortController()
 
   useEffect(() => {
-    axios.get(`${config.api.uri}/product/actions/search?name=${search}&category=${category}&page=${page}&limit=${3}`, { signal: controller.signal })
-      .then(result => { setProducts(result.data.result) })
-      .catch(err => console.log(err))
-  }, [page, category, search])
-  /* ======================================================SORT FUNCTION==================================================== */
-  const sortedProductPriceDesc = (e) => {
-    const newProds = [...products]
-    setProducts(newProds.sort((p1, p2) => (p1.price < p2.price) ? 1 : (p1.price > p2.price) ? -1 : 0))
-  }
-
-  const sortedProductPriceAsc = (e) => {
-    const newProds = [...products]
-    setProducts(newProds.sort((p1, p2) => (p1.price > p2.price) ? 1 : (p1.price < p2.price) ? -1 : 0))
-  }
-  /* ======================================================================================================================= */
+    const timer = setTimeout(() => {
+      toast.loading('Caricamento')
+      axios.get(`${config.api.uri}/product/actions/search?name=${search}&category=${category}&page=${page}&limit=${limit}&sort=${sort}`, { signal: controller.signal })
+        .then(result => {
+          setProducts(result.data.result)
+          if (category === '') {
+            axios.get(`${config.api.uri}/product/count?name=${search}`)
+              .then(result => {
+                let pg = (Math.floor(result.data.data.count / 3))
+                if ((result.data.data.count % 3) !== 0) { pg += 1 }
+                setPageCount(pg)
+              })
+              .catch(err => console.log(err))
+          } else {
+            axios.get(`${config.api.uri}/product/count?name=${search}&category=${category}`)
+              .then(result => {
+                let pg = (Math.floor(result.data.data.count / 3))
+                if ((result.data.data.count % 3) !== 0) { pg += 1 }
+                setPageCount(pg)
+              })
+              .catch(err => console.log(err))
+          }
+          toast.dismiss()
+        })
+        .catch(err => {
+          console.log(err)
+          toast.dismiss()
+        })
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [update])
 
   return (
     <div>
       <div className='filtri'>
        < nav className="navbar navbar-light bg-light">
           <div style={{ display: 'flex', margin: '10px 50px 20px' }}>
-            <input className="form-control mr-sm-2" onChange={handleSearch} type="search" placeholder="Search" aria-label="Search" value={search}/>
+            <input className="form-control mr-sm-2" onChange={handleSearch} type="search" placeholder="Search" style={{ margin: 'auto 50px auto' }} aria-label="Search" value={search} />
             <select id="category" onChange={handleCategorySearch} name="cars" className="form-control select select-initialized" style={{ margin: 'auto 50px auto' }} value={category}>
-                    <option value="">Filtra per categoria</option>
+                    <option value="">Categoria: nessuna</option>
                     {
                       categorys.map((cat) => (
                         <option key={cat._id} value={cat._id}>{cat.name}</option>
                       ))
                     }
                 </select>
-                <button type="button" className="btn" onClick={sortedProductPriceAsc}>PREZZO CRESCENTE</button>
-                <button type="button" className="btn" onClick={sortedProductPriceDesc}>PREZZO DECRESCENTE</button>
+                <button type="button" className="btn" onClick={ () => {
+                  controller.abort()
+                  setSort('asc')
+                  setUpdate(!update)
+                }}>PREZZO CRESCENTE</button>
+                <button type="button" className="btn" onClick={ () => {
+                  controller.abort()
+                  setSort('desc')
+                  setUpdate(!update)
+                }}>PREZZO DECRESCENTE</button>
            </div>
        </nav>
       </div>

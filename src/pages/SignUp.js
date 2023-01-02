@@ -3,29 +3,37 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import config from '../configuration.js'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router'
 
 function SignUp () {
+  const navigate = useNavigate()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [repeatPassword, setRepeatPassword] = useState('')
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    try {
-      await axios.post(`${config.api.uri}/auth`, {
-        name,
-        email,
-        password
-      })
+    if (password === repeatPassword) {
+      try {
+        await axios.post(`${config.api.uri}/auth`, {
+          name,
+          email,
+          password
+        })
 
-      // ritorna i campi a stringhe vuote
-      setName('')
-      setEmail('')
-      setPassword('')
+        // ritorna i campi a stringhe vuote
+        setName('')
+        setEmail('')
+        setPassword('')
 
-      toast.success('Registrazione avenuta con successo')
-    } catch (err) {
-      toast.error(err.response.data.error)
+        toast.success('Registrazione avenuta con successo')
+        navigate('/signin')
+      } catch (err) {
+        toast.error(err.response.data.error)
+      }
+    } else {
+      toast.error('i campi password devono corrispondere')
     }
   }
 
@@ -47,6 +55,11 @@ function SignUp () {
         <div className="form-outline mb-4">
           <input onChange={e => setPassword(e.target.value)} type="password" id="form4Example3" className="form-control" value={password}/>
           <label className="form-label" htmlFor="form4Example3">Password</label>
+        </div>
+
+        <div className="form-outline mb-4">
+          <input onChange={e => setRepeatPassword(e.target.value)} type="password" id="form4Example4" className="form-control" value={repeatPassword}/>
+          <label className="form-label" htmlFor="form4Example3">password</label>
         </div>
 
         <button onClick={handleSubmit} type="submit" className="btn btn-primary btn-block mb-4">Register</button>
