@@ -12,6 +12,7 @@ import UserDashboard from './pages/user/UserDashboard'
 import CreateProduct from './pages/admin/CreateProduct'
 import PrivateRoutes from './component/PrivateRoutes'
 import ProductInfo from './pages/ProductInfo'
+import ChangePassword from './pages/user/ChangePassword'
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
       <Header/>
       <Routes>
         <Route path='/' element={<Home/>}/>
+        <Route path='/reset/password/:token' element={<ChangePassword/>}/>
         <Route path='/signup' element={<SignUp/>}/>
         <Route path='/signin' element={<SignIn/>}/>
         <Route path='/product/:id' element={<ProductInfo/>}/>
