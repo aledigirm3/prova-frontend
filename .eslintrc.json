@@ -5,7 +5,7 @@
   },
   "extends": [
     "plugin:react/recommended",
-    "standard"
+    "plugin:prettier/recommended"
   ],
   "overrides": [],
   "parserOptions": {
@@ -15,5 +15,12 @@
   "plugins": [
     "react"
   ],
-  "rules": {}
+  "rules": {
+     "prettier/prettier": [
+            "error",
+            {
+                "endOfLine": "auto"
+            }
+        ]
+  }
 }

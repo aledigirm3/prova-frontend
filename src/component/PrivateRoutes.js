@@ -1,15 +1,13 @@
-import React from 'react'
-import { Outlet, Navigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import React from "react";
+import { Outlet, Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const PrivateRoute = () => {
-  const auth = document.cookie.match('accessToken')
+  const auth = document.cookie.match("accessToken");
   if (!auth) {
-    toast.error('Devi prima autenticarti')
+    toast.error("Devi prima autenticarti");
   }
-  return (
-    auth ? <Outlet/> : <Navigate to = "/signin"/>
-  )
-}
+  return auth ? <Outlet /> : <Navigate to="/signin" />;
+};
 
-export default PrivateRoute
+export default PrivateRoute;
