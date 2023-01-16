@@ -16,6 +16,19 @@ const Card = ({ id, image, productName, prodCategory, price, role }) => {
         console.log(err);
       });
   };
+  const addToCart = () => {
+    axios
+      .post(
+        `${config.api.uri}/cart/actions/addproduct`,
+        { id },
+        {
+          withCredentials: true,
+        }
+      )
+      .then(() => toast.success("Prodotto aggiunto al carrello con successo"))
+      .catch((err) => toast.error(err.response.data.error));
+  };
+
   return (
     <div
       className="card"
@@ -33,19 +46,19 @@ const Card = ({ id, image, productName, prodCategory, price, role }) => {
         <div style={{ display: "flex" }}>
           <a
             href={`/product/${id}`}
-            className="btn btn-black"
+            className="btn btn-outline-dark btn-rounded"
             style={{ margin: "0% 0% 0% 0%", padding: "3%" }}
           >
             INFO
           </a>
-          <a
-            className="btn btn-success"
-            href="#"
-            role="button"
-            style={{ margin: "0% 0% 0% 5%", padding: "3%" }}
+          <button
+            className="btn btn-dark btn-rounded mr-1"
+            data-toggle="tooltip"
+            data-original-title="Add to cart"
+            onClick={addToCart}
           >
-            Buy now
-          </a>
+            <i className="fa fa-shopping-cart"></i>
+          </button>
 
           {role === 1 ? (
             <>

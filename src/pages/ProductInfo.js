@@ -26,6 +26,23 @@ const ProductInfo = () => {
       });
   }, []);
 
+  //PAGAMENTO
+  const handlePay = () => {
+    console.log(product);
+    axios
+      .post(`${config.api.uri}/stripe/create-checkout-session-product`, {
+        product,
+      })
+      .then((result) => {
+        if (result.data.url) {
+          window.location.href = result.data.url;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
     <div className="container" style={{ margin: "3%" }}>
       <div className="card">
@@ -55,7 +72,12 @@ const ProductInfo = () => {
               >
                 <i className="fa fa-shopping-cart"></i>
               </button>
-              <button className="btn btn-success btn-rounded">Buy Now</button>
+              <button
+                className="btn btn-success btn-rounded"
+                onClick={handlePay}
+              >
+                Buy Now
+              </button>
               <h3 className="box-title mt-5">Key Highlights</h3>
               <ul className="list-unstyled">
                 <li>

@@ -26,7 +26,7 @@ const Home = () => {
         console.log(err);
       });
 
-    //Controllo ruolo utente
+    //Controllo ruolo utente da passare a card
     axios
       .get(`${config.api.uri}/auth/actions/getme`, { withCredentials: true })
       .then((result) => setUserRole(result.data.user.role))
