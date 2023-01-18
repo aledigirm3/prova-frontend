@@ -92,8 +92,8 @@ const Home = () => {
             axios
               .get(`${config.api.uri}/product/count?name=${search}`)
               .then((result) => {
-                let pg = Math.floor(result.data.data.count / 3);
-                if (result.data.data.count % 3 !== 0) {
+                let pg = Math.floor(result.data.data.count / limit);
+                if (result.data.data.count % limit !== 0) {
                   pg += 1;
                 }
                 setPageCount(pg);
@@ -105,8 +105,8 @@ const Home = () => {
                 `${config.api.uri}/product/count?name=${search}&category=${category}`
               )
               .then((result) => {
-                let pg = Math.floor(result.data.data.count / 3);
-                if (result.data.data.count % 3 !== 0) {
+                let pg = Math.floor(result.data.data.count / limit);
+                if (result.data.data.count % limit !== 0) {
                   pg += 1;
                 }
                 setPageCount(pg);
