@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
 const Card = ({ id, image, productName, prodCategory, price, role }) => {
+  const controller = new AbortController();
   const deleteHandler = () => {
     axios
       .delete(`${config.api.uri}/product/${id}`, { withCredentials: true })
@@ -17,13 +18,16 @@ const Card = ({ id, image, productName, prodCategory, price, role }) => {
       });
   };
   const addToCart = () => {
+    toast.dismiss();
+    controller.abort();
     axios
       .post(
         `${config.api.uri}/cart/actions/addproduct`,
         { id },
         {
           withCredentials: true,
-        }
+        },
+        { signal: controller.signal }
       )
       .then(() => toast.success("Prodotto aggiunto al carrello con successo"))
       .catch((err) => toast.error(err.response.data.error));

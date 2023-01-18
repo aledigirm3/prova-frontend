@@ -32,6 +32,7 @@ const UserDashboard = () => {
   }, [categoryToDelete, name]);
 
   useEffect(() => {
+    toast.loading("Caricamento");
     axios
       .get(`${config.api.uri}/auth/actions/getme`, { withCredentials: true })
       .then(async (res) => {
@@ -48,12 +49,15 @@ const UserDashboard = () => {
               await result.data.result.prodotti.map((p) => (tot += p.price));
             }
             setTotal(tot);
+            toast.dismiss();
           })
           .catch((err) => {
             console.log(err);
+            toast.dismiss();
           });
       })
       .catch((err) => {
+        toast.dismiss();
         navigate("/signin");
         console.log(err);
       });
@@ -70,9 +74,8 @@ const UserDashboard = () => {
       )
       .then(() => {
         setUpdate(!update);
-        toast.success("Prodotto rimosso dal carrello");
       })
-      .catch((error) => toast.error(error.response.data.error));
+      .catch((error) => console.log(error));
   };
 
   const handleSubmitCategory = () => {
@@ -111,15 +114,20 @@ const UserDashboard = () => {
   //PAY
   const handlePay = () => {
     axios
-      .post(`${config.api.uri}/stripe/create-checkout-session`, {
-        prodotti,
-      })
+      .post(
+        `${config.api.uri}/stripe/create-checkout-session`,
+        {
+          prodotti,
+        },
+        { withCredentials: true }
+      )
       .then((result) => {
         if (result.data.url) {
           window.location.href = result.data.url;
         }
       })
-      .catch((error) => {
+      .catch((err) => {
+        toast.error(err.response.data.error);
         console.log(error);
       });
   };

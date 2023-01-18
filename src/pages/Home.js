@@ -33,7 +33,7 @@ const Home = () => {
       .catch(() => setUserRole(0));
   }, []);
   /* ======================================================PAGINATION==================================================== */
-  const limit = 3;
+  const limit = 3; //usa questa variabile per decidere quanti prodotti visualizzare ogni pagina
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
 
@@ -79,6 +79,7 @@ const Home = () => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      toast.dismiss();
       toast.loading("Caricamento");
       axios
         .get(

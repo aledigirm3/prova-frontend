@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { toast } from "react-toastify";
 import config from "../configuration";
 
 const ProductInfo = () => {
@@ -22,24 +23,44 @@ const ProductInfo = () => {
           });
       })
       .catch((err) => {
+        toast.error(err.response.data.error);
         console.log(err);
       });
   }, []);
+
+  const addToCart = () => {
+    toast.dismiss();
+    axios
+      .post(
+        `${config.api.uri}/cart/actions/addproduct`,
+        { id },
+        {
+          withCredentials: true,
+        }
+      )
+      .then(() => toast.success("Prodotto aggiunto al carrello con successo"))
+      .catch((err) => toast.error(err.response.data.error));
+  };
 
   //PAGAMENTO
   const handlePay = () => {
     console.log(product);
     axios
-      .post(`${config.api.uri}/stripe/create-checkout-session-product`, {
-        product,
-      })
+      .post(
+        `${config.api.uri}/stripe/create-checkout-session-product`,
+        {
+          product,
+        },
+        { withCredentials: true }
+      )
       .then((result) => {
         if (result.data.url) {
           window.location.href = result.data.url;
         }
       })
-      .catch((error) => {
-        console.log(error);
+      .catch((err) => {
+        toast.error(err.response.data.error);
+        console.log(err);
       });
   };
 
@@ -69,6 +90,7 @@ const ProductInfo = () => {
                 data-toggle="tooltip"
                 title=""
                 data-original-title="Add to cart"
+                onClick={addToCart}
               >
                 <i className="fa fa-shopping-cart"></i>
               </button>

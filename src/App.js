@@ -15,6 +15,7 @@ import ProductInfo from "./pages/ProductInfo";
 import ChangePassword from "./pages/user/ChangePassword";
 import CheckoutSuccess from "./pages/user/CheckoutSuccess";
 import NotFound from "./pages/user/NotFound";
+import CheckoutFailed from "./pages/user/CheckoutFailed";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/product/:id" element={<ProductInfo />} />
         <Route path="/admin/create/product" element={<CreateProduct />} />
         <Route path="/user/checkout-success" element={<CheckoutSuccess />} />
+        <Route path="/user/checkout-failed" element={<CheckoutFailed />} />
         <Route path="*" element={<NotFound />} />
         <Route element={<PrivateRoutes />}>
           <Route path="/user/dashboard" element={<UserDashboard />} />
