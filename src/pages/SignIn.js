@@ -13,14 +13,11 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        `${config.api.uri}/auth/actions/signin`,
-        {
-          email,
-          password,
-        },
-        { withCredentials: true }
-      );
+      const result = await axios.post(`${config.api.uri}/auth/actions/signin`, {
+        email,
+        password,
+      });
+      localStorage.setItem("accessToken", result.data.data.token);
 
       // ritorna i campi a stringhe vuote
       setEmail("");
@@ -36,11 +33,7 @@ function SignIn() {
     toast.dismiss();
 
     axios
-      .post(
-        `${config.api.uri}/auth/actions/forgotpassword`,
-        { email },
-        { withCredentials: true }
-      )
+      .post(`${config.api.uri}/auth/actions/forgotpassword`, { email })
       .then(() => {
         setEmail("");
         toast.success("Controllare la posta elettronica");
@@ -50,7 +43,42 @@ function SignIn() {
         setEmail("");
       });
   };
+  //=============FACEBOOK LOGIN===========
 
+  /*   const handleAuthFacebook = () => {
+        fetch(`${config.api.uri}/auth/actions/facebook`, {
+      method: "GET",
+    })
+      .then((response) => {
+        toast.success("accesso effettuato");
+        console.log("response:", response);
+        //localStorage.setItem("accessToken", result.data.data.token);
+        //navigate("/user/dashboard");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+        console.log(error);
+
+        navigate("/signin");
+      });
+ 
+    axios
+      .get(`${config.api.uri}/auth/actions/facebook`)
+      .then(() => {
+        toast.success("accesso effettuato");
+        localStorage.setItem("accessToken", result.data.data.token);
+        navigate("/user/dashboard");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+        console.log("error: ", error);
+        console.log("error.response: ", error.response);
+
+        navigate("/signin");
+      });
+  }; */
+
+  //================================
   return (
     <div>
       <div className="container custom_className pt-5">
@@ -153,6 +181,17 @@ function SignIn() {
             </div>
           </div>
         </div>
+      </div>
+      <div style={{ textAlign: "center" }}>
+        <p>Accedi con:</p>
+        <a
+          className="btn text-white"
+          style={{ backgroundColor: "#3b5998" }}
+          href={`${config.api.uri}/auth/actions/facebook`}
+          role="button"
+        >
+          <i className="fab fa-facebook-f"></i>
+        </a>
       </div>
     </div>
   );

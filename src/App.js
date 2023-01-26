@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -16,8 +16,26 @@ import ChangePassword from "./pages/user/ChangePassword";
 import CheckoutSuccess from "./pages/user/CheckoutSuccess";
 import NotFound from "./pages/user/NotFound";
 import CheckoutFailed from "./pages/user/CheckoutFailed";
+import axios from "axios";
+import config from "./configuration";
+import { useNavigate } from "react-router-dom";
 
 const App = () => {
+  const navigate = useNavigate();
+  //controllo se è stato effettuato un accesso con microservizio
+  useEffect(() => {
+    const auth = document.cookie.match("accessToken");
+    if (auth) {
+      localStorage.setItem(
+        "accessToken",
+        auth.input.slice(auth.input.indexOf("=") + 1).trim()
+      );
+      axios.get(`${config.api.uri}/auth/actions/clearcookie`, {
+        withCredentials: true,
+      });
+      navigate("/user/dashboard");
+    }
+  }, []);
   return (
     <div>
       <ToastContainer />

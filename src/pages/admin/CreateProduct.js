@@ -51,7 +51,11 @@ const CreateProduct = () => {
           category,
           image,
         },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`,
+          },
+        }
       );
 
       setName("");

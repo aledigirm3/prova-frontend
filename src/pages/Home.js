@@ -28,7 +28,11 @@ const Home = () => {
 
     //Controllo ruolo utente da passare a card
     axios
-      .get(`${config.api.uri}/auth/actions/getme`, { withCredentials: true })
+      .get(`${config.api.uri}/auth/actions/getme`, {
+        headers: {
+          Authorization: `${localStorage.getItem("accessToken")}`,
+        },
+      })
       .then((result) => setUserRole(result.data.user.role))
       .catch(() => setUserRole(0));
   }, []);

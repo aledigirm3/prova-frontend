@@ -8,11 +8,12 @@ import { toast } from "react-toastify";
 const Header = () => {
   const navigate = useNavigate();
   const logOut = () => {
+    toast.dismiss();
     axios
-      .get(`${config.api.uri}/auth/actions/logout`, { withCredentials: true })
+      .get(`${config.api.uri}/auth/actions/logout`)
       .then((res) => {
         toast.success("Disconnessione...");
-        // localStorage.removeItem('accessToken')
+        localStorage.removeItem("accessToken");
         navigate("/signin");
       })
       .catch((err) => {

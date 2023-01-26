@@ -25,7 +25,9 @@ const Card = ({ id, image, productName, prodCategory, price, role }) => {
         `${config.api.uri}/cart/actions/addproduct`,
         { id },
         {
-          withCredentials: true,
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`,
+          },
         },
         { signal: controller.signal }
       )

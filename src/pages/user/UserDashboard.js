@@ -32,15 +32,27 @@ const UserDashboard = () => {
   }, [categoryToDelete, name]);
 
   useEffect(() => {
-    toast.loading("Caricamento");
+    toast.dismiss();
+    const toastId = toast.loading("Caricamento...");
+
     axios
-      .get(`${config.api.uri}/auth/actions/getme`, { withCredentials: true })
+      .get(
+        `${config.api.uri}/auth/actions/getme`,
+
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`,
+          },
+        }
+      )
       .then(async (res) => {
         await setUser(res.data.user);
 
         axios
           .get(`${config.api.uri}/cart/actions/displayproduct`, {
-            withCredentials: true,
+            headers: {
+              Authorization: `${localStorage.getItem("accessToken")}`,
+            },
           })
           .then(async (result) => {
             setProdotti(result.data.result.prodotti);
@@ -49,15 +61,18 @@ const UserDashboard = () => {
               await result.data.result.prodotti.map((p) => (tot += p.price));
             }
             setTotal(tot);
-            toast.dismiss();
+            toast.dismiss(toastId);
           })
           .catch((err) => {
             console.log(err);
-            toast.dismiss();
+            toast.dismiss(toastId);
           });
       })
       .catch((err) => {
-        toast.dismiss();
+        toast.dismiss(toastId);
+        toast.warning(
+          "Chiave di accesso invalida o scaduta... Perfavore eseguire nuovamente l' accesso"
+        );
         navigate("/signin");
         console.log(err);
       });
@@ -69,7 +84,9 @@ const UserDashboard = () => {
         `${config.api.uri}/cart/actions/removeproduct/`,
         { id },
         {
-          withCredentials: true,
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`,
+          },
         }
       )
       .then(() => {
@@ -83,7 +100,11 @@ const UserDashboard = () => {
       .post(
         `${config.api.uri}/category`,
         { name, description },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`,
+          },
+        }
       )
       .then((result) => {
         setName("");
@@ -100,7 +121,9 @@ const UserDashboard = () => {
     }
     axios
       .delete(`${config.api.uri}/category/${categoryToDelete}`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `${localStorage.getItem("accessToken")}`,
+        },
       })
       .then((result) => {
         setCategoryToDelete("");
@@ -119,7 +142,11 @@ const UserDashboard = () => {
         {
           prodotti,
         },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`,
+          },
+        }
       )
       .then((result) => {
         if (result.data.url) {

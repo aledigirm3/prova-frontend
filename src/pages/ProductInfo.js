@@ -9,6 +9,8 @@ const ProductInfo = () => {
   const [product, setProduct] = useState("");
   const [category, setCategory] = useState("");
   useEffect(() => {
+    toast.dismiss();
+    const toastId = toast.loading("Caricamento...");
     axios
       .get(`${config.api.uri}/product/${id}`)
       .then(async (result) => {
@@ -17,13 +19,16 @@ const ProductInfo = () => {
           .get(`${config.api.uri}/category/${result.data.data.category}`)
           .then((result2) => {
             setCategory(result2.data.data);
+            toast.dismiss(toastId);
           })
           .catch((error) => {
             console.log(error);
+            toast.dismiss(toastId);
           });
       })
       .catch((err) => {
         toast.error(err.response.data.error);
+        toast.dismiss(toastId);
         console.log(err);
       });
   }, []);
@@ -35,7 +40,9 @@ const ProductInfo = () => {
         `${config.api.uri}/cart/actions/addproduct`,
         { id },
         {
-          withCredentials: true,
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`,
+          },
         }
       )
       .then(() => toast.success("Prodotto aggiunto al carrello con successo"))
@@ -51,7 +58,11 @@ const ProductInfo = () => {
         {
           product,
         },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("accessToken")}`,
+          },
+        }
       )
       .then((result) => {
         if (result.data.url) {
