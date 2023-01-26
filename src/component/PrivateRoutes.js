@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 const PrivateRoute = () => {
   const auth = localStorage.getItem("accessToken");
   if (!auth) {
+    toast.dismiss();
     toast.error("Devi prima autenticarti");
   }
   return auth ? <Outlet /> : <Navigate to="/signin" />;

@@ -37,7 +37,7 @@ const Home = () => {
       .catch(() => setUserRole(0));
   }, []);
   /* ======================================================PAGINATION==================================================== */
-  const limit = 3; //usa questa variabile per decidere quanti prodotti visualizzare ogni pagina
+  const limit = config.paginationNumber; //usa questa variabile per decidere quanti prodotti visualizzare ogni pagina
   const [page, setPage] = useState(1);
   const [pageCount, setPageCount] = useState(0);
 
@@ -45,6 +45,7 @@ const Home = () => {
     controller.abort();
     const p = page;
     if (p === 1) {
+      setUpdate(!update);
       return;
     }
 
@@ -56,6 +57,7 @@ const Home = () => {
     controller.abort();
     const p = page;
     if (p === pageCount) {
+      setUpdate(!update);
       return;
     }
 
@@ -63,23 +65,6 @@ const Home = () => {
     setUpdate(!update);
   };
   /* ======================================================================================================================= */
-
-  const handleCategorySearch = (e) => {
-    controller.abort();
-    setCategory(e.target.value);
-    setSearch("");
-    setSort("");
-    setPage(1);
-    setUpdate(!update);
-  };
-
-  const handleSearch = (e) => {
-    controller.abort();
-    setSearch(e.target.value);
-    setSort("");
-    setPage(1);
-    setUpdate(!update);
-  };
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -126,6 +111,24 @@ const Home = () => {
     }, 500);
     return () => clearTimeout(timer);
   }, [update]);
+
+  //DA RIVEDERE (se non carica il '/count' le page scorreranno all'infinito)
+  const handleCategorySearch = (e) => {
+    controller.abort();
+    setCategory(e.target.value);
+    setSearch("");
+    setSort("");
+    setPage(1);
+    setUpdate(!update);
+  };
+
+  const handleSearch = (e) => {
+    controller.abort();
+    setSearch(e.target.value);
+    setSort("");
+    setPage(1);
+    setUpdate(!update);
+  };
 
   return (
     <div>

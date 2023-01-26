@@ -41,6 +41,8 @@ const CreateProduct = () => {
   // SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
+    toast.dismiss();
+    const toastId = toast.loading("Caricamento...");
     try {
       await axios.post(
         `${config.api.uri}/product`,
@@ -63,9 +65,11 @@ const CreateProduct = () => {
       setPrice("");
       setCategory("");
       setImage("");
+      toast.dismiss(toastId);
 
       toast.success("Prodotto aggiunto con successo");
     } catch (err) {
+      toast.dismiss(toastId);
       toast.error(err.response.data.error);
     }
   };
