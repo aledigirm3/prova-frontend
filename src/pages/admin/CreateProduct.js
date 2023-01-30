@@ -26,17 +26,21 @@ const CreateProduct = () => {
 
   // handle and convert it in base 64
   const handleImage = (e) => {
-    const file = e.target.files[0];
-    setFileToBase(file);
+    const imageUrl = URL.createObjectURL(e.target.files[0]);
+    console.log(imageUrl);
+    setImage(imageUrl);
+    //const file = e.target.files[0];
+    // setFileToBase(file);
   };
 
-  const setFileToBase = (file) => {
+  //image BASE 64
+  /*   const setFileToBase = (file) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
       setImage(reader.result);
     };
-  };
+  }; */
 
   // SUBMIT
   const handleSubmit = async (e) => {

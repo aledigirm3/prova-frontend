@@ -8,7 +8,11 @@ const Card = ({ id, image, productName, prodCategory, price, role }) => {
   const controller = new AbortController();
   const deleteHandler = () => {
     axios
-      .delete(`${config.api.uri}/product/${id}`, { withCredentials: true })
+      .delete(`${config.api.uri}/product/${id}`, {
+        headers: {
+          Authorization: `${localStorage.getItem("accessToken")}`,
+        },
+      })
       .then(() => {
         window.location.reload(false);
         toast.success("Prodotto eliminato con successo");
